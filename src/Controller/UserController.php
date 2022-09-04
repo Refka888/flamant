@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Users;
 use App\Repository\UsersRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,4 +19,10 @@ class UserController extends AbstractController
         $jsonUserList = $serializer->serialize($userList, 'json');
         return new JsonResponse($jsonUserList, Response::HTTP_OK, [], true);
     }
+    #[Route('/api/users/{id}', name: 'detailUser', methods: ['GET'])]
+    public function getDetailUsers(Users $user, SerializerInterface $serializer){
+            $jsonUser = $serializer->serialize($user, 'json');
+            return new JsonResponse($jsonUser, Response::HTTP_OK,[], true);
+    } 
+    
 }
