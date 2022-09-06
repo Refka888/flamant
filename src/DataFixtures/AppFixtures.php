@@ -2,11 +2,10 @@
 
 namespace App\DataFixtures;
 
-
+use App\Entity\Cat;
 use App\Entity\User;
 use App\Entity\Order;
 use App\Entity\Product;
-use App\Entity\Category;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -26,6 +25,13 @@ class AppFixtures extends Fixture
         $manager ->persist($user);
         $listUser[] = $user;
      }
+     $listCat = [];
+     for ($i=0; $i < 10; $i++){
+         $cat = new Cat();
+         $cat ->setName("Name". $i);
+         $manager ->persist($cat);
+         $listCat[] = $cat;
+     }
         $listOrder = [];
      for ($i=0; $i < 20; $i++){
          $order = new Order();
@@ -34,18 +40,9 @@ class AppFixtures extends Fixture
          $order ->setUsers($listUser[array_rand($listUser)]);
          $manager ->persist($order);
          $listOrder[] = $order;
-      }
-
-      $listCategory = [];
-      for ($i=0; $i < 20 ; $i++) { 
-         $category = new Category();
-         $category ->setName("Name". $i);
-         $manager ->persist($category);
-         $listCategory[] = $category;
-      }
-
+     }
+    
       $listQuantity = [10, 20, 100, 150, 250, 300, 320, 350];
-      $listProduct = [];
       for ($i=0; $i < 20; $i++){
          $product = new Product();
          $product ->setName("Name". $i);
@@ -54,13 +51,10 @@ class AppFixtures extends Fixture
          $product ->setQuantity($listQuantity[array_rand($listQuantity)]);
          $product ->setPrice($listQuantity[array_rand($listQuantity)]);
          $product ->setOrders($listOrder[array_rand($listOrder)]);
-         $product ->setCategory($listCategory[array_rand($listCategory)]);
+         $product ->setCat($listCat[array_rand($listCat)]);
          $manager ->persist($product);
-
-         $listProduct[] = $product;
-      
+       
       }
-   
         $manager->flush();
     }
 }
