@@ -16,14 +16,14 @@ class UserController extends AbstractController
     public function getUserList(UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
     {
         $userList = $userRepository->findAll();
-        $jsonBookList = $serializer->serialize($userList, 'json');
+        $jsonBookList = $serializer->serialize($userList, 'json', ['groups' => 'getUsers']);
         return new JsonResponse($jsonBookList, Response::HTTP_OK, [], true);
     }
     
     #[Route('/api/users/{id}', name: 'detailUser', methods: ['GET'])]
     public function getDetailBook(User $user, SerializerInterface $serializer): JsonResponse 
     {
-        $jsonUser = $serializer->serialize($user, 'json');
+        $jsonUser = $serializer->serialize($user, 'json', ['groups' => 'getUsers']);
         return new JsonResponse($jsonUser, Response::HTTP_OK, ['accept' => 'json'], true);
     }
 }
