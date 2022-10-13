@@ -8,12 +8,16 @@ use App\Entity\Order;
 use App\Entity\Product;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-
-
-
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private $userPasswordHasher;
+    
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
+    {
+        $this->userPasswordHasher = $userPasswordHasher;
+    }
     public function load(ObjectManager $manager): void
     { 
         $listUser = [];
@@ -21,11 +25,20 @@ class AppFixtures extends Fixture
         $user = new User();
         $user ->setfirstName("firstName". $i);
         $user ->setlastName("lastName". $i);
-        $user ->setemail("user". $i ."@gmail.com");
-        $user ->setpassword("**********". $i);
+        $user->setEmail("user@shop.com");
+        $user->setRoles(["ROLE_USER"]);
+        $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
         $manager ->persist($user);
         $listUser[] = $user;
+
+       // Création d'un user admin
+        $userAdmin = new User();
+        $userAdmin->setEmail("admin@shop.com");
+        $userAdmin->setRoles(["ROLE_ADMIN"]);
+        $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
+        $manager->persist($userAdmin);
      }
+     
      $listCat = [];
      for ($i=0; $i < 10; $i++){
          $cat = new Cat();

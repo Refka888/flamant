@@ -25,10 +25,16 @@ class User
     #[Groups(["getUsers","getOrders"])]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique:true)]
     #[Groups(["getUsers","getOrders"])]
     private ?string $email = null;
 
+    #[ORM\Column]
+    private array $roles = [];
+    
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column(length: 255)]
     #[Groups(["getUsers","getOrders"])]
     private ?string $password = null;
@@ -36,6 +42,7 @@ class User
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
     #[Groups(["getUsers"])]
     private Collection $orders;
+
 
     public function __construct()
     {
@@ -70,6 +77,7 @@ class User
 
         return $this;
     }
+    
 
     public function getEmail(): ?string
     {
@@ -82,6 +90,39 @@ class User
 
         return $this;
     }
+   /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+     /**
+     * @see PasswordAuthenticatedUserInterface
+     */
 
     public function getPassword(): ?string
     {
@@ -127,5 +168,13 @@ class User
         }
 
         return $this;
+    }
+     /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }

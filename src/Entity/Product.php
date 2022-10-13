@@ -36,11 +36,11 @@ class Product
     private ?int $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete:"SET NULL")]
     private ?Order $orders = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
     #[Groups(["getCats", "getProducts"])]
     private ?Cat $cat = null;
 

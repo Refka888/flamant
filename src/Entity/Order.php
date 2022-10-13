@@ -27,7 +27,7 @@ class Order
     private ?string $statut = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders', targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
     #[Groups(["getOrders", "getProducts"])]
     private ?User $users = null;
 
