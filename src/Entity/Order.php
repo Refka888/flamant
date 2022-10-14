@@ -26,14 +26,20 @@ class Order
     #[Groups(["getUsers", "getOrders", "getProducts"])]
     private ?string $statut = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orders', targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
-    #[Groups(["getOrders", "getProducts"])]
-    private ?User $users = null;
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'orders', targetEntity: Product::class)]
-    #[Groups(["getProducts", "getOrders"])]
+    #[ORM\ManyToMany(targetEntity: Product::class)]
     private Collection $products;
+
+    // #[ORM\ManyToOne(inversedBy: 'orders', targetEntity: User::class)]
+    // #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
+    // #[Groups(["getOrders", "getProducts"])]
+    // private ?User $users = null;
+
+    // #[ORM\OneToMany(mappedBy: 'orders', targetEntity: Product::class)]
+    // #[Groups(["getProducts", "getOrders"])]
+    // private Collection $products;
 
     public function __construct()
     {
@@ -69,14 +75,56 @@ class Order
         return $this;
     }
 
-    public function getUsers(): ?User
+    // public function getUsers(): ?User
+    // {
+    //     return $this->users;
+    // }
+
+    // public function setUsers(?User $users): self
+    // {
+    //     $this->users = $users;
+
+    //     return $this;
+    // }
+
+    // /**
+    //  * @return Collection<int, Product>
+    //  */
+    // public function getProducts(): Collection
+    // {
+    //     return $this->products;
+    // }
+
+    // public function addProduct(Product $product): self
+    // {
+    //     if (!$this->products->contains($product)) {
+    //         $this->products->add($product);
+    //         $product->setOrders($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeProduct(Product $product): self
+    // {
+    //     if ($this->products->removeElement($product)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($product->getOrders() === $this) {
+    //             $product->setOrders(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
+
+    public function getUser(): ?User
     {
-        return $this->users;
+        return $this->user;
     }
 
-    public function setUsers(?User $users): self
+    public function setUser(?User $user): self
     {
-        $this->users = $users;
+        $this->user = $user;
 
         return $this;
     }
@@ -93,7 +141,6 @@ class Order
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
-            $product->setOrders($this);
         }
 
         return $this;
@@ -101,12 +148,7 @@ class Order
 
     public function removeProduct(Product $product): self
     {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getOrders() === $this) {
-                $product->setOrders(null);
-            }
-        }
+        $this->products->removeElement($product);
 
         return $this;
     }

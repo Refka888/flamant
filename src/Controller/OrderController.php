@@ -61,10 +61,11 @@ class OrderController extends AbstractController
        $updatedOrder = $serializer->deserialize($request->getContent(), 
                Order::class, 
                'json', 
+        
                [AbstractNormalizer::OBJECT_TO_POPULATE => $currentOrder]);
        $content = $request->toArray();
-       $idUser = $content['idUser'] ?? -1;
-       $updatedOrder->setUser($userRepository->find($idUser));
+        $idUser = $content['user'] ;
+    $updatedOrder->setUser($userRepository->find($idUser));
        
        $em->persist($updatedOrder);
        $em->flush();

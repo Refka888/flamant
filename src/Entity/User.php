@@ -6,10 +6,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -39,10 +41,10 @@ class User
     #[Groups(["getUsers","getOrders"])]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Order::class)]
-    #[Groups(["getUsers"])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection $orders;
 
+  
 
     public function __construct()
     {
@@ -136,14 +138,20 @@ class User
         return $this;
     }
 
+    
+     /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
     /**
      * @return Collection<int, Order>
      */
     public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-    public function setOrders(): Collection
     {
         return $this->orders;
     }
@@ -152,7 +160,7 @@ class User
     {
         if (!$this->orders->contains($order)) {
             $this->orders->add($order);
-            $order->setUsers($this);
+            $order->setUser($this);
         }
 
         return $this;
@@ -162,19 +170,11 @@ class User
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getUsers() === $this) {
-                $order->setUsers(null);
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
             }
         }
 
         return $this;
-    }
-     /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 }

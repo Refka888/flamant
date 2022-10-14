@@ -6,6 +6,7 @@ use App\Entity\Cat;
 use App\Entity\User;
 use App\Repository\CatRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,8 +22,7 @@ class CatController extends AbstractController
     public function getCatList(CatRepository $catRepository, SerializerInterface $serializer): JsonResponse
 
     {
-            $catList = $catRepository->findAll();
-          
+            $catList = $catRepository->findAll();          
                 $jsonCatList = $serializer->serialize($catList, 'json', ['groups' => 'getCats']);
                 return new JsonResponse($jsonCatList, Response::HTTP_OK, [], true);
             
@@ -32,8 +32,11 @@ class CatController extends AbstractController
     public function getDetailCat(Cat $cat, SerializerInterface $serializer): JsonResponse 
     {
        // if($cat){
+
             $jsonCat = $serializer->serialize($cat, 'json', ['groups' => 'getCats']);
             return new JsonResponse($jsonCat, Response::HTTP_OK, ['accept' => 'json'], true);
+       
+        
         //}
    
     } 

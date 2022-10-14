@@ -66,11 +66,7 @@ class ProductController extends AbstractController
        $updatedProduct = $serializer->deserialize($request->getContent(), 
                Product::class, 
                'json', 
-               [AbstractNormalizer::OBJECT_TO_POPULATE => $currentProduct]);
-       $content = $request->toArray();
-       $idOrder = $content['idOrder'] ?? -1;
-       $updatedProduct->setOrder($orderRepository->find($idOrder));
-       
+               [AbstractNormalizer::OBJECT_TO_POPULATE => $currentProduct]);       
        $em->persist($updatedProduct);
        $em->flush();
        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);

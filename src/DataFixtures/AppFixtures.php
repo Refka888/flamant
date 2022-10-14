@@ -25,19 +25,21 @@ class AppFixtures extends Fixture
         $user = new User();
         $user ->setfirstName("firstName". $i);
         $user ->setlastName("lastName". $i);
-        $user->setEmail("user@shop.com");
+        $user->setEmail("user".$i."@shop.com");
         $user->setRoles(["ROLE_USER"]);
         $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
         $manager ->persist($user);
         $listUser[] = $user;
-
+     }
        // Création d'un user admin
         $userAdmin = new User();
+        $userAdmin ->setfirstName("firstName". $i);
+        $userAdmin ->setlastName("lastName". $i);
         $userAdmin->setEmail("admin@shop.com");
         $userAdmin->setRoles(["ROLE_ADMIN"]);
         $userAdmin->setPassword($this->userPasswordHasher->hashPassword($userAdmin, "password"));
         $manager->persist($userAdmin);
-     }
+     
      
      $listCat = [];
      for ($i=0; $i < 10; $i++){
@@ -51,7 +53,7 @@ class AppFixtures extends Fixture
          $order = new Order();
          $order ->setCode("123456". $i);
          $order ->setStatut("Statut". $i);
-         $order ->setUsers($listUser[array_rand($listUser)]);
+         $order ->setUser($listUser[array_rand($listUser)]);
          $manager ->persist($order);
          $listOrder[] = $order;
      }
@@ -64,8 +66,8 @@ class AppFixtures extends Fixture
          $product ->setImage("image". $i);
          $product ->setQuantity($listQuantity[array_rand($listQuantity)]);
          $product ->setPrice($listQuantity[array_rand($listQuantity)]);
-         $product ->setOrders($listOrder[array_rand($listOrder)]);
-         $product ->setCat($listCat[array_rand($listCat)]);
+        // $product ->setOrders($listOrder[array_rand($listOrder)]);
+         $product ->setCategory($listCat[array_rand($listCat)]);
          $manager ->persist($product);
        
       }

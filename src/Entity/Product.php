@@ -35,14 +35,17 @@ class Product
     #[Groups(["getProducts", "getOrders", "getCats"])]
     private ?int $price = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: true, onDelete:"SET NULL")]
-    private ?Order $orders = null;
+    #[ORM\ManyToOne]
+    private ?Cat $category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'products')]
-    #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
-    #[Groups(["getCats", "getProducts"])]
-    private ?Cat $cat = null;
+    // #[ORM\ManyToOne(inversedBy: 'products')]
+    // #[ORM\JoinColumn(nullable: true, onDelete:"SET NULL")]
+    // private ?Order $orders = null;
+
+    // #[ORM\ManyToOne(inversedBy: 'products')]
+    // #[ORM\JoinColumn(nullable: false, onDelete:"SET NULL")]
+    // #[Groups(["getCats", "getProducts"])]
+    // private ?Cat $cat = null;
 
 
 
@@ -111,26 +114,38 @@ class Product
         return $this;
     }
 
-    public function getOrders(): ?Order
+    // public function getOrders(): ?Order
+    // {
+    //     return $this->orders;
+    // }
+
+    // public function setOrders(?Order $orders): self
+    // {
+    //     $this->orders = $orders;
+
+    //     return $this;
+    // }
+
+    // public function getCat(): ?Cat
+    // {
+    //     return $this->cat;
+    // }
+
+    // public function setCat(?Cat $cat): self
+    // {
+    //     $this->cat = $cat;
+
+    //     return $this;
+    // }
+
+    public function getCategory(): ?Cat
     {
-        return $this->orders;
+        return $this->category;
     }
 
-    public function setOrders(?Order $orders): self
+    public function setCategory(?Cat $category): self
     {
-        $this->orders = $orders;
-
-        return $this;
-    }
-
-    public function getCat(): ?Cat
-    {
-        return $this->cat;
-    }
-
-    public function setCat(?Cat $cat): self
-    {
-        $this->cat = $cat;
+        $this->category = $category;
 
         return $this;
     }
